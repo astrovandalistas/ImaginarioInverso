@@ -14,7 +14,6 @@ float lastR = 0;
 float lastG = 0;
 float lastB = 0; // track of the last Colors
 
-
 void setup() {
   size(720, 850);
   background(0);
@@ -33,26 +32,20 @@ void setup() {
   noStroke();
 }
 
-int xmin = 0;
-int xmax = 400;
-int ymin = 0;
-int ymax = 80;
-
 void draw() {
   if (movie.available() == true) {
     background(0);
     movie.read(); 
 
     movie.loadPixels();
-    movie.filter(THRESHOLD,0.9);
 
     float r=0;
     float g=0;
     float b=0;
     float c=0;
 
-    for (int j = ymin; j < movie.height; j ++) {
-      for (int i = xmin; i < movie.width; i ++) {
+    for (int j = 0; j < movie.height; j ++) {
+      for (int i = 0; i < movie.width; i ++) {
         color pixelColor = movie.pixels[j * movie.width + i];
         r += red(pixelColor);
         g += green(pixelColor);
@@ -68,24 +61,25 @@ void draw() {
     //if the color change then trigger the sound
     int threshold = 1;
 
-
     //using MIDI notes from 0 to 127 https://newt.phys.unsw.edu.au/jw/notes.html
     // if the last R, G, B is different by the thereshold then trigger the note
     // r%127 takes the color value from 0-255(color interval) and transforms it to 0-127 (MIDI interval)
     if (abs(lastR - r) > threshold) {
-      out.playNote(0, 0.3, new ToneInstrument(Frequency.ofMidiNote(max(r%127,32)).asHz(), 0.1));
-    }
-    if (abs(lastG - g) > threshold) {
-      out.playNote(0, 0.3, new ToneInstrument(Frequency.ofMidiNote(max(g%127,32)).asHz(), 0.1));
-    }
-    if (abs(lastB - b) > threshold) {
-      out.playNote(0, 0.3, new ToneInstrument(Frequency.ofMidiNote(max(b%127,32)).asHz(), 0.1));
+      out.playNote(0, 0.3, new NoteInstrument(Frequency.ofMidiNote(max(r%127, 32)).asHz()));
     }
 
-    //keep Track our last color
+    if (abs(lastG - g) > threshold) {
+      out.playNote(0, 0.3, new NoteInstrument(Frequency.ofMidiNote(max(g%127, 32)).asHz()));
+    }
+
+    if (abs(lastB - b) > threshold) {
+      out.playNote(0, 0.3, new NoteInstrument(Frequency.ofMidiNote(max(b%127, 32)).asHz()));
+    }
+
+    // keep track of our last color
     lastR = r;
-    lastG = r;
-    lastB = r;
+    lastG = g;
+    lastB = b;
 
     color averageColor = color(r, g, b);
 
@@ -93,9 +87,6 @@ void draw() {
     translate(0, 0);
     scale(((float)width/height) * ((float)movie.width/movie.height));
     image(movie, 0, 0);
-    translate(xmin, ymin);
-    fill(200, 0, 0, 128);
-    rect(0, 0, xmax-xmin, ymax-ymin);
     popMatrix();
 
     pushMatrix();
@@ -114,11 +105,11 @@ void keyPressed() {
   }
 }
 
-class ToneInstrument implements Instrument {
+class NoteInstrument implements Instrument {
   Oscil sineOsc;
 
-  ToneInstrument(float frequency, float amplitude) {
-    sineOsc = new Oscil(frequency, amplitude, Waves.SINE);
+  NoteInstrument(float frequency) {
+    sineOsc = new Oscil(frequency, 0.1, Waves.SINE);
   }
 
   void noteOn(float dur) {
