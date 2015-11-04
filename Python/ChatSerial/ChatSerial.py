@@ -8,7 +8,7 @@ import curses
 SERIAL_PORT_NAME = "/dev/ttyAMA0"
 SERIAL_BAUD_RATE = 115200
 
-GREETING_TEXT = 'Please type some stuff / Escriba algo:'
+GREETING_TEXT = 'Envía un mensaje al futuro / Send a message to the future :'
 
 def drawScreen():
     global mScreen, mMessages
