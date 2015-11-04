@@ -6,7 +6,9 @@ from termcolor import colored, cprint
 import curses
 
 SERIAL_PORT_NAME = "/dev/ttyAMA0"
-SERIAL_BAUD_RATE = 9600
+SERIAL_BAUD_RATE = 115200
+
+GREETING_TEXT = 'Please type some stuff / Escriba algo:'
 
 def drawScreen():
     global mScreen, mMessages
@@ -21,6 +23,7 @@ def drawScreen():
 
         s = "".join(s.split('\x00'))
         mScreen.addstr(i,mScreen.getyx()[1],s)
+        mScreen.clrtoeol()
     mScreen.refresh()
 
 class readThread (Thread):
@@ -46,7 +49,7 @@ class writeThread (Thread):
         Thread.__init__(self)
         self.mThreadRunning = False
         self.currentString = ""
-        mScreen.addstr(mScreen.getmaxyx()[0]-5,0,"**: "+self.currentString)
+        mScreen.addstr(mScreen.getmaxyx()[0]-5,0,GREETING_TEXT+"\n"+"**: "+self.currentString)
         mScreen.refresh()
     def run(self):
         self.mThreadRunning = True
@@ -59,9 +62,13 @@ class writeThread (Thread):
                 mMessages.append("**: "+self.currentString)
                 mSerial.write(self.currentString+'\n')
                 self.currentString  = ""
-                mScreen.addstr(mScreen.getmaxyx()[0]-5,0,"**: "+self.currentString)
+                mScreen.addstr(mScreen.getmaxyx()[0]-5,0,GREETING_TEXT+"\n"+"**: "+self.currentString)
                 mScreen.clrtoeol()
-
+                drawScreen()
+            elif (event == 8) or (event == 127):
+                self.currentString = self.currentString[:-1]
+                mScreen.addstr(mScreen.getmaxyx()[0]-5,0,GREETING_TEXT+"\n"+"**: "+self.currentString)
+                mScreen.clrtoeol()
                 drawScreen()
             else:
                 try:
@@ -69,7 +76,7 @@ class writeThread (Thread):
                 except Exception as e:
                     pass
 
-            mScreen.addstr(mScreen.getmaxyx()[0]-5,0,"**: "+self.currentString)
+            mScreen.addstr(mScreen.getmaxyx()[0]-5,0,GREETING_TEXT+"\n"+"**: "+self.currentString)
             mScreen.refresh()
 
     def stop(self):
