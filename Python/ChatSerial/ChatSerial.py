@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from time import sleep, time
 from threading import Thread
 from sys import exit
