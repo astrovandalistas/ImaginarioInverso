@@ -67,7 +67,7 @@ class writeThread (Thread):
                 mScreen.addstr(mScreen.getmaxyx()[0]-5,0,GREETING_TEXT+"\n"+"**: "+self.currentString)
                 mScreen.clrtoeol()
                 drawScreen()
-            elif (event == 8) or (event == 127):
+            elif (event == 8) or (event == 127) or (event == 263):
                 self.currentString = self.currentString[:-1]
                 mScreen.addstr(mScreen.getmaxyx()[0]-5,0,GREETING_TEXT+"\n"+"**: "+self.currentString)
                 mScreen.clrtoeol()
