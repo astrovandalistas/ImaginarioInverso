@@ -22,7 +22,7 @@ void drawGliph(int x, int y, String s) {
   for (int i=0; i<s.length(); i++) {
     char c = s.charAt(i);
     pushMatrix();
-    rotate(i*PI/6);
+    //rotate(i*PI/6);
     for (int j=0; j<8; j++) {
       if ((c>>j&0x1) == 1) {
         stroke(0);
@@ -30,8 +30,9 @@ void drawGliph(int x, int y, String s) {
         stroke(255);
       }
       float r = i*(LINE_WIDTH+CHAR_SPACE)+MIN_RADIUS;
+      float sp = PI/(20*(i+1));
       strokeWeight(LINE_WIDTH);
-      arc(0, 0, 2*r, 2*r, j*TWO_PI/8, (j+1)*TWO_PI/8-PI/32);
+      arc(0, 0, 2*r, 2*r, j*TWO_PI/8, (j+1)*TWO_PI/8-sp);
     }
     popMatrix();
   }
