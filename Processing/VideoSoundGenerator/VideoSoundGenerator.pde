@@ -85,13 +85,13 @@ void draw() {
 
     pushMatrix();
     translate(0, 0);
-    scale(((float)width/height) * ((float)movie.width/movie.height));
+    scale((float)width/movie.width);
     image(movie, 0, 0);
     popMatrix();
 
     pushMatrix();
-    translate(0, height/2);
-    scale(((float)width/height) * ((float)movie.width/movie.height));
+    scale((float)width/movie.width);
+    translate(0, movie.height);
     fill(averageColor);
     rect(0, 0, movie.width, movie.height);
     popMatrix();
