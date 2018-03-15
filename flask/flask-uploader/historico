@@ -1,0 +1,5 @@
+sudo pip install -e "git://github.com/FelixLoether/flask-uploads#egg=Flask-Uploads"
+
+sudo pip install -e git://github.com/kvesteri/flask-storage.git#egg=Flask-Storage
+
+sudo pip install Flask-SQLAlchemy

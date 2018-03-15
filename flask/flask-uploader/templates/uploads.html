@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  
+<title>uploads</title>
+
+<script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+
+
+<script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+
+<script type="text/javascript">
+  
+  $(document).ready(function(){
+
+    $('a.deleteLink').click(function(e){
+      
+      e.preventDefault();
+
+      var a = $(this);
+
+      var pswd = window.prompt('introduce la contraseña',"astros");
+
+      if( pswd ){ 
+        if( pswd == "astros" ) {
+              
+
+          var base_url = window.location.href;
+          base_url = base_url.substr(0, base_url.length - 1);
+          var delUrl = base_url + a.attr('href');
+
+          $.ajax({
+            url: delUrl,
+            type: 'POST',
+            success: function(){
+
+              window.location = base_url;
+
+            }
+          });
+
+
+        }
+      }
+
+    });
+
+  });
+</script>
+
+
+
+</head>
+
+
+<div class="page">
+  <h1>Upload</h1>
+  <div class="metanav">
+  </div>
+  {% for file in uploads %}
+    <div class="flash">
+		<img src="{{ file.url }}"/>
+    </div>
+
+    <div class="flash">
+		  <a href="{{ file.url }}">
+    	 {{ file.name }}
+    	</a>
+
+      <a class="deleteLink" href="{{url_for('.remove', id=file.id)}}">
+       Borrar
+      </a>
+
+    </div>
+  {% endfor %}
+  {% block body %}{% endblock %}
+</div>
+
+
+</html>

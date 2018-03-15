@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block title %}Upload{% endblock %}
+{% block content %}
+<div>
+<div>
+    <form method="post" enctype="multipart/form-data">
+    <input type="file" name="file_data" tabindex="1" onchange="addUploadField(2)"/>
+    <br />
+    <input type="submit" id="submit" name="upload" tabindex="2"/>
+    </form>
+</div>
+
+{% if message is defined and message %}
+    <div>{{message}}</div>
+{% endif %}
+
+{% if error is defined and error %}
+    <div>{{error['msg']}} (#{{error['code']}})</div>
+{% endif %}
+
+<p><a href="/logout">Log out</a></p>
+</div>
+<script type="text/javascript">
+function addUploadField(tabIndex){
+    var form = document.getElementsByTagName('form')[0];
+    var fileElements = document.getElementsByName('file_data');
+    var submitButton = document.getElementById('submit');
+    var uploadField = document.createElement('input');
+    var br = document.createElement('br');
+    for(var i=0; i<fileElements.length; i++){
+        fileElements[i].removeAttribute('onchange');
+    }
+    uploadField.type = 'file';
+    uploadField.name = 'file_data';
+    uploadField.tabIndex = tabIndex;
+    uploadField.setAttribute('onchange', 'addUploadField(' + (tabIndex + 1).toString() + ')');
+    submitButton.tabIndex = tabIndex + 1;
+    form.insertBefore(uploadField, submitButton);
+    form.insertBefore(br, submitButton);
+}
+</script>
+{% endblock %}

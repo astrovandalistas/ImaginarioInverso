@@ -1,0 +1,12 @@
+
+$colorF : #fa0;
+
+
+
+.button {
+
+	&, &:hover, &:focus {
+		background-color: $colorF;
+	}
+
+}
